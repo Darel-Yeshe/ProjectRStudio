@@ -1,0 +1,38 @@
+orders <- read.csv("orders.csv", fileEncoding = "UTF-8-BOM", na.strings = c("NA", "na", "N/A", ""))
+products <- read.csv("products.csv", na.strings = c("NA", "na", "N/A", ""))
+
+orders <- na.omit(orders)
+
+boxplot(products$product_price~products$department, col = rainbow(length(unique(products$department))), 
+        main = "Product Price for All Product Department", xlab = "Department", ylab = "Product Price", las = 3, cex.axis = 0.7)
+
+
+products.count <- table(products$department)
+products.count
+products.sort <- sort(products.count, decreasing = TRUE)
+products.sort
+products.top <- head(products.sort, 5)
+products.top
+products.others <- sum(products.sort[-(1:5)])
+products.others
+
+products.final <- c(products.top, other = products.others)
+
+count <- round(products.final/sum(products.final)*100, 2)
+
+count
+
+label <- paste(names(products.final), "(", count, ")", sep = "")
+label
+pie(products.final, col = rainbow(length(products.final)))
+legend("topright", legend = names(products.final), fill = rainbow(length(products.final)), cex = 0.6)
+
+frozen <- products[products$department == "frozen",]
+frozen
+aisle.count <- table(frozen$aisle)
+aisle.count
+aisle.sort <- sort(aisle.count)
+aisle.sort
+aisle.top <- head(aisle.sort, 3)
+
+barplot(aisle.top, col = rainbow(length(aisle.top)), main = "Lowest 3", ylim = c(0, 150), cex.axis = 0.8)
